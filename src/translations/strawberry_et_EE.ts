@@ -5654,7 +5654,7 @@ Kas soovid jätkata?</translation>
     </message>
     <message>
       <source>Waiting for browser authentication...</source>
-      <translation type="unfinished">Waiting for browser authentication...</translation>
+      <translation>Ootan autentimist veebibrauseris...</translation>
     </message>
     <message>
       <source>OAuth redirect failed: %1</source>
@@ -5753,7 +5753,7 @@ Kas soovid jätkata?</translation>
     </message>
     <message>
       <source>Missing private key. Please fetch credentials first.</source>
-      <translation type="unfinished">Missing private key. Please fetch credentials first.</translation>
+      <translation>Privaatvõti on puudu. Palun esmalt laadi kasutajanimi/salasõna.</translation>
     </message>
     <message>
       <source>Authentication failed</source>
@@ -5785,7 +5785,7 @@ Kas soovid jätkata?</translation>
     </message>
     <message>
       <source>Private key</source>
-      <translation type="unfinished">Private key</translation>
+      <translation>Privaatvõti</translation>
     </message>
     <message>
       <source>Automatically fetch app ID, app secret and private key from Qobuz web player</source>
