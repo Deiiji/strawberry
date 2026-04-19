@@ -459,13 +459,14 @@ jobs:
         run: |
           git clone --depth 1 --recurse-submodules https://github.com/KDAB/KDSingleApplication
           cd KDSingleApplication
-          # La ligne magique est ici : on force l'installation dans /usr
-          cmake -S . -B build -DCMAKE_BUILD_TYPE="Release" -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DKDSingleApplication_STATIC=ON -DCMAKE_INSTALL_PREFIX=/usr
+          # On laisse KD s'installer naturellement dans /usr/local
+          cmake -S . -B build -DCMAKE_BUILD_TYPE="Release" -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DKDSingleApplication_STATIC=ON
           cmake --build build --config Release --parallel 4
           sudo cmake --install build
-      - name: Build
+      - name: Build Strawberry
         run: |
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          # On FORCE Strawberry à regarder dans /usr/local pour trouver KD
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_PREFIX_PATH=/usr/local
           cmake --build build --parallel 4
       - name: Package
         run: dpkg-buildpackage -b -d -uc -us -nc -j4
@@ -548,7 +549,7 @@ jobs:
           sync: rsync
           prepare: |
             pkgman refresh
-            pkgman install -y qt6_base_devel sqlite_devel boost_devel taglib_devel chromaprint_devel gstreamer_devel cmake ninja pkgconfig
+            pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel boost_devel taglib_devel chromaprint_devel gstreamer_devel cmake ninja pkgconfig
           run: |
             cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF
             ninja -C build
