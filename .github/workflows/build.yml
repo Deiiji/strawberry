@@ -543,10 +543,12 @@ jobs:
       - name: Build in Haiku VM
         uses: vmactions/haiku-vm@v1
         with:
+          usesh: true  # On force l'utilisation du shell standard
+          sync: rsync  # On force rsync pour éviter les erreurs de copie SSH
           prepare: |
-            pkgman install -y devel:libqt6core devel:libqt6widgets devel:libsqlite3 devel:libboost_headers devel:libtag devel:libchromaprint devel:libgstreamer_1.0 cmake ninja
+            pkgman install -y devel:libqt6core devel:libqt6widgets devel:libsqlite3 devel:libboost_headers devel:libtag devel:libchromaprint devel:libgstreamer_1.0 cmake ninja pkgconfig
           run: |
-            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF
             ninja -C build
       - name: Upload (Binary)
         uses: actions/upload-artifact@v4
