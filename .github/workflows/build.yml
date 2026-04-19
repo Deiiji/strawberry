@@ -551,6 +551,7 @@ jobs:
           # On déplace l'artillerie lourde ici pour voir les logs en direct
           # On garde l'artillerie lourde ici pour voir les logs en direct
           # Toujours dans l'étape 'run' pour garder les logs ouverts !
+          # Toujours dans l'étape 'run'
           run: |
             set -e
             echo "--- MISE A JOUR DES DEPOTS ---"
@@ -566,7 +567,7 @@ jobs:
             pkgman install -y taglib_devel
             pkgman install -y chromaprint_devel
             pkgman install -y gstreamer_devel
-            pkgman install -y cmake ninja pkgconfig
+            pkgman install -y cmake ninja pkgconfig git
             
             echo "--- CONFIGURATION CMAKE ---"
             cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF
