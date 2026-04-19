@@ -454,18 +454,17 @@ jobs:
       - name: Install packages
         run: |
           sudo apt update
-          sudo apt install -y build-essential cmake qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-tools-dev-tools libglib2.0-dev libboost-dev libsqlite3-dev libasound2-dev libpulse-dev libtag1-dev libicu-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libchromaprint-dev libebur128-dev libfftw3-dev libcdio-dev libmtp-dev libgpod-dev libxkbcommon-dev libsparsehash-dev
+          sudo apt install -y build-essential dh-make fakeroot dpkg-dev cmake qt6-base-dev qt6-base-private-dev qt6-tools-dev qt6-tools-dev-tools libglib2.0-dev libboost-dev libsqlite3-dev libasound2-dev libpulse-dev libtag1-dev libicu-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libchromaprint-dev libebur128-dev libfftw3-dev libcdio-dev libmtp-dev libgpod-dev libxkbcommon-dev libsparsehash-dev
       - name: Build and install KDSingleApplication
         run: |
           git clone --depth 1 --recurse-submodules https://github.com/KDAB/KDSingleApplication
           cd KDSingleApplication
-          # On laisse KD s'installer naturellement dans /usr/local
           cmake -S . -B build -DCMAKE_BUILD_TYPE="Release" -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DKDSingleApplication_STATIC=ON
           cmake --build build --config Release --parallel 4
           sudo cmake --install build
       - name: Build Strawberry
         run: |
-          # On FORCE Strawberry à regarder dans /usr/local pour trouver KD
+          # La voici, la ligne magique qui dit à CMake où chercher !
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_PREFIX_PATH=/usr/local
           cmake --build build --parallel 4
       - name: Package
