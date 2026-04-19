@@ -549,13 +549,15 @@ jobs:
           # On fait juste un 'echo' pour valider la connexion SSH sans risque
           prepare: echo "Connexion SSH Haiku réussie !"
           # On déplace l'artillerie lourde ici pour voir les logs en direct
+          # On garde l'artillerie lourde ici pour voir les logs en direct
           run: |
             set -e
             echo "--- MISE A JOUR DES DEPOTS ---"
             pkgman refresh
             
             echo "--- INSTALLATION DES DEPENDANCES ---"
-            pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel boost_devel taglib_devel chromaprint_devel gstreamer_devel cmake ninja pkgconfig
+            # On utilise tes anciens noms (devel:lib...) qui sont à l'épreuve des mises à jour, mixés avec la correction Qt6 !
+            pkgman install -y qt6_base_devel qt6_tools_devel devel:libsqlite3 devel:libboost_headers devel:libtag devel:libchromaprint devel:libgstreamer_1.0 cmake ninja pkgconfig
             
             echo "--- CONFIGURATION CMAKE ---"
             cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF
