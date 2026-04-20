@@ -562,7 +562,8 @@ jobs:
             pkgman install -y boost1.90_devel || pkgman install -y boost170_devel || pkgman install -y boost169_devel || pkgman install -y boost_devel
             
             echo "--- INSTALLATION DES DEPENDANCES METIER ---"
-            pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel pkgconfig
+            # J'ai ajouté gst_plugins_base_devel et libcdio_devel ici !
+            pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel gst_plugins_base_devel libcdio_devel pkgconfig
             
             echo "--- INSTALLATION DES OUTILS DE BUILD ---"
             pkgman install -y git
