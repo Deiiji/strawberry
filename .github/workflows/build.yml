@@ -551,8 +551,6 @@ jobs:
           # On déplace l'artillerie lourde ici pour voir les logs en direct
           # On garde l'artillerie lourde ici pour voir les logs en direct
           # Toujours dans l'étape 'run' pour garder les logs ouverts !
-          # Toujours dans l'étape 'run'
-          # Toujours dans l'étape 'run' !
           run: |
             set -e
             echo "--- MISE A JOUR DES DEPOTS ---"
@@ -562,7 +560,6 @@ jobs:
             pkgman install -y boost1.90_devel || pkgman install -y boost170_devel || pkgman install -y boost169_devel || pkgman install -y boost_devel
             
             echo "--- INSTALLATION DES DEPENDANCES METIER ---"
-            # On a retiré le faux-ami libpulse_devel !
             pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel gst_plugins_base_devel libcdio_devel pkgconfig
             
             echo "--- INSTALLATION DES OUTILS DE BUILD ---"
@@ -580,7 +577,8 @@ jobs:
             cd ..
             
             echo "--- CONFIGURATION CMAKE STRAWBERRY ---"
-            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
+            # J'ai ajouté -DENABLE_X11_GLOBALSHORTCUTS=OFF juste ici !
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DENABLE_X11_GLOBALSHORTCUTS=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
             
             echo "--- COMPILATION NINJA ---"
             ninja -C build
