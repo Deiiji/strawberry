@@ -562,8 +562,8 @@ jobs:
             pkgman install -y boost1.90_devel || pkgman install -y boost170_devel || pkgman install -y boost169_devel || pkgman install -y boost_devel
             
             echo "--- INSTALLATION DES DEPENDANCES METIER ---"
-            # J'ajoute libpulse_devel en filet de sécurité
-            pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel gst_plugins_base_devel libcdio_devel libpulse_devel pkgconfig
+            # On a retiré le faux-ami libpulse_devel !
+            pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel gst_plugins_base_devel libcdio_devel pkgconfig
             
             echo "--- INSTALLATION DES OUTILS DE BUILD ---"
             pkgman install -y git cmake ninja
@@ -580,7 +580,6 @@ jobs:
             cd ..
             
             echo "--- CONFIGURATION CMAKE STRAWBERRY ---"
-            # La correction de ENABLE_PULSE=OFF est ici !
             cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
             
             echo "--- COMPILATION NINJA ---"
