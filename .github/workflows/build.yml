@@ -565,14 +565,15 @@ jobs:
             pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel pkgconfig
             
             echo "--- INSTALLATION DES OUTILS DE BUILD ---"
-            # On les sépare un par un pour forcer Haiku à les installer proprement !
             pkgman install -y git
             pkgman install -y cmake
             pkgman install -y ninja
             
+            echo "--- DEBLOCAGE DE GIT ---"
+            git config --global --add safe.directory '*'
+            
             echo "--- CONFIGURATION CMAKE ---"
-            # Le garde-fou ultime : si Git plante, CMake continuera quand même !
-            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF || true
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF
             
             echo "--- COMPILATION NINJA ---"
             ninja -C build
