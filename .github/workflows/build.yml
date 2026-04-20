@@ -577,8 +577,8 @@ jobs:
             cd ..
             
             echo "--- CONFIGURATION CMAKE STRAWBERRY ---"
-            # J'ai ajouté -DENABLE_X11_GLOBALSHORTCUTS=OFF juste ici !
-            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DENABLE_X11_GLOBALSHORTCUTS=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
+            # J'ai ajouté -DENABLE_MTP=OFF à la liste !
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DENABLE_X11_GLOBALSHORTCUTS=OFF -DENABLE_MTP=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
             
             echo "--- COMPILATION NINJA ---"
             ninja -C build
