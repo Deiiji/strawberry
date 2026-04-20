@@ -575,12 +575,13 @@ jobs:
             cd KDSingleApplication
             cmake -S . -B build -DCMAKE_BUILD_TYPE="Release" -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DKDSingleApplication_STATIC=ON
             cmake --build build --config Release --parallel 2
-            cmake --install build --prefix /boot/system
+            # On installe dans l'espace utilisateur de Haiku
+            cmake --install build --prefix /boot/home/config/non-packaged
             cd ..
             
             echo "--- CONFIGURATION CMAKE STRAWBERRY ---"
-            # On indique à CMake où on a installé KDSingleApplication (/boot/system)
-            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF -DCMAKE_PREFIX_PATH=/boot/system
+            # On dit à Strawberry de regarder dans non-packaged pour trouver KD
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
             
             echo "--- COMPILATION NINJA ---"
             ninja -C build
