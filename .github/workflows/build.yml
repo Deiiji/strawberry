@@ -562,7 +562,8 @@ jobs:
             pkgman install -y boost1.90_devel || pkgman install -y boost170_devel || pkgman install -y boost169_devel || pkgman install -y boost_devel
             
             echo "--- INSTALLATION DES DEPENDANCES METIER ---"
-            pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel gst_plugins_base_devel libcdio_devel pkgconfig
+            # J'ajoute libpulse_devel en filet de sécurité
+            pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel gst_plugins_base_devel libcdio_devel libpulse_devel pkgconfig
             
             echo "--- INSTALLATION DES OUTILS DE BUILD ---"
             pkgman install -y git cmake ninja
@@ -575,13 +576,12 @@ jobs:
             cd KDSingleApplication
             cmake -S . -B build -DCMAKE_BUILD_TYPE="Release" -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DKDSingleApplication_STATIC=ON
             cmake --build build --config Release --parallel 2
-            # On installe dans l'espace utilisateur de Haiku
             cmake --install build --prefix /boot/home/config/non-packaged
             cd ..
             
             echo "--- CONFIGURATION CMAKE STRAWBERRY ---"
-            # On dit à Strawberry de regarder dans non-packaged pour trouver KD
-            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSEAUDIO=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
+            # La correction de ENABLE_PULSE=OFF est ici !
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
             
             echo "--- COMPILATION NINJA ---"
             ninja -C build
