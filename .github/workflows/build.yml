@@ -577,8 +577,8 @@ jobs:
             cd ..
             
             echo "--- CONFIGURATION CMAKE STRAWBERRY ---"
-            # Le petit dernier ajouté à la liste : -DENABLE_EBUR128=OFF
-            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DENABLE_X11_GLOBALSHORTCUTS=OFF -DENABLE_MTP=OFF -DENABLE_GPOD=OFF -DENABLE_MOODBAR=OFF -DENABLE_EBUR128=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
+            # Ajout de -DENABLE_STREAMTAGREADER=OFF
+            cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DENABLE_X11_GLOBALSHORTCUTS=OFF -DENABLE_MTP=OFF -DENABLE_GPOD=OFF -DENABLE_MOODBAR=OFF -DENABLE_EBUR128=OFF -DENABLE_STREAMTAGREADER=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
             
             echo "--- COMPILATION NINJA ---"
             ninja -C build
