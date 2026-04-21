@@ -534,10 +534,13 @@ jobs:
 
   build-haiku:
     name: Build Haiku OS
-    if: github.event_name == 'release'
+    if: (github.event_name == 'push' && github.ref_name != 'l10n_master') ||
+        (github.event_name == 'pull_request' && github.head_ref != 'l10n_master') ||
+        (github.event_name == 'release')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+        # ... la suite ne change pas ...
         uses: actions/checkout@v6
         with:
           submodules: recursive
