@@ -583,8 +583,7 @@ jobs:
             echo "--- PATCH DES FICHIERS PKG-CONFIG (BUG HAIKU) ---"
             mkdir -p /boot/home/config/non-packaged/lib/pkgconfig
             cp /boot/system/develop/lib/pkgconfig/*.pc /boot/home/config/non-packaged/lib/pkgconfig/
-            sed -i 's|/packages/[^/]*\.self|/boot/system|g' /boot/home/config/non-packaged/lib/pkgconfig/*.pc
-            
+            sed -i 's|/packages/[^/]*/\.self|/boot/system|g' /boot/home/config/non-packaged/lib/pkgconfig/*.pc
             export PKG_CONFIG_PATH="/boot/home/config/non-packaged/lib/pkgconfig"
             
             echo "--- CONFIGURATION CMAKE STRAWBERRY ---"
