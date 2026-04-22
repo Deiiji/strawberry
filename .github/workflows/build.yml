@@ -580,11 +580,19 @@ jobs:
             cmake --install build --prefix /boot/home/config/non-packaged
             cd ..
             
+            echo "--- PATCH DES FICHIERS PKG-CONFIG (BUG HAIKU) ---"
+            mkdir -p /boot/home/config/non-packaged/lib/pkgconfig
+            cp /boot/system/develop/lib/pkgconfig/*.pc /boot/home/config/non-packaged/lib/pkgconfig/
+            sed -i 's|/packages/[^/]*\.self|/boot/system|g' /boot/home/config/non-packaged/lib/pkgconfig/*.pc
+            
+            export PKG_CONFIG_PATH="/boot/home/config/non-packaged/lib/pkgconfig:$PKG_CONFIG_PATH"
+            
             echo "--- CONFIGURATION CMAKE STRAWBERRY ---"
             cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DENABLE_ALSA=OFF -DENABLE_PULSE=OFF -DENABLE_X11_GLOBALSHORTCUTS=OFF -DENABLE_MTP=OFF -DENABLE_GPOD=OFF -DENABLE_MOODBAR=OFF -DENABLE_EBUR128=OFF -DENABLE_STREAMTAGREADER=OFF -DENABLE_GIO=OFF -DENABLE_DBUS=OFF -DENABLE_MPRIS2=OFF -DENABLE_KGLOBALACCEL_GLOBALSHORTCUTS=OFF -DENABLE_UDISKS2=OFF -DCMAKE_PREFIX_PATH=/boot/home/config/non-packaged
             
             echo "--- COMPILATION NINJA ---"
             ninja -C build
+            
             
       - name: Upload (Binary)
         uses: actions/upload-artifact@v4
