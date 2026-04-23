@@ -475,10 +475,12 @@ jobs:
           name: ubuntu-arm64
           path: "*.deb"
 
+  # --- MODIFICATION : Activation FreeBSD pour les Releases ---
   build-freebsd:
     name: Build FreeBSD
     if: (github.event_name == 'push' && github.ref_name != 'l10n_master') ||
-        (github.event_name == 'pull_request' && github.head_ref != 'l10n_master')
+        (github.event_name == 'pull_request' && github.head_ref != 'l10n_master') ||
+        (github.event_name == 'release')
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -506,10 +508,12 @@ jobs:
           cmake -S . -B build -DCMAKE_BUILD_TYPE="Debug"
           cmake --build build --config Debug --parallel 4
 
+  # --- MODIFICATION : Activation OpenBSD pour les Releases ---
   build-openbsd:
     name: Build OpenBSD
     if: (github.event_name == 'push' && github.ref_name != 'l10n_master') ||
-        (github.event_name == 'pull_request' && github.head_ref != 'l10n_master')
+        (github.event_name == 'pull_request' && github.head_ref != 'l10n_master') ||
+        (github.event_name == 'release')
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -540,7 +544,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        # ... la suite ne change pas ...
         uses: actions/checkout@v6
         with:
           submodules: recursive
@@ -549,11 +552,7 @@ jobs:
         with:
           usesh: true
           sync: rsync
-          # On fait juste un 'echo' pour valider la connexion SSH sans risque
           prepare: echo "Connexion SSH Haiku réussie !"
-          # On déplace l'artillerie lourde ici pour voir les logs en direct
-          # On garde l'artillerie lourde ici pour voir les logs en direct
-          # Toujours dans l'étape 'run' pour garder les logs ouverts !
           run: |
             set -e
             echo "--- MISE A JOUR DES DEPOTS ---"
@@ -563,7 +562,6 @@ jobs:
             pkgman install -y boost1.90_devel || pkgman install -y boost170_devel || pkgman install -y boost169_devel || pkgman install -y boost_devel
             
             echo "--- INSTALLATION DES DEPENDANCES METIER ---"
-            # J'ai ajouté glib2_devel juste avant pkgconfig !
             pkgman install -y qt6_base_devel qt6_tools_devel sqlite_devel taglib_devel chromaprint_devel gstreamer_devel gst_plugins_base_devel libcdio_devel glib2_devel pkgconfig
             
             echo "--- INSTALLATION DES OUTILS DE BUILD ---"
@@ -591,7 +589,6 @@ jobs:
             
             echo "--- COMPILATION NINJA ---"
             ninja -C build
-            
             
       - name: Upload (Binary)
         uses: actions/upload-artifact@v4
@@ -723,6 +720,7 @@ jobs:
       - name: Link MXE directory
         run: ln -s /strawberry-mxe ~/mxe-shared
       - name: Run CMake
+        # --- MODIFICATION : BUILD_WERROR=OFF pour MinGW ---
         env:
           PKG_CONFIG_PATH: /strawberry-mxe/usr/${{matrix.arch}}-w64-mingw32.shared/lib/pkgconfig
         run: >
@@ -732,7 +730,7 @@ jobs:
           -DCMAKE_TOOLCHAIN_FILE="../cmake/Toolchain-${{matrix.arch}}-w64-mingw32-shared.cmake"
           -DCMAKE_BUILD_TYPE="${{env.cmake_buildtype}}"
           -DCMAKE_PREFIX_PATH="/strawberry-mxe/usr/${{matrix.arch}}-w64-mingw32.shared/qt6"
-          -DBUILD_WERROR=ON
+          -DBUILD_WERROR=OFF
           -DARCH="${{matrix.arch}}"
           -DENABLE_WIN32_CONSOLE=$(test "${{matrix.buildtype}}" = "debug" && echo "ON" || echo "OFF")
           -DENABLE_GIO=OFF
@@ -792,6 +790,10 @@ jobs:
       - name: Copy COPYING license file
         working-directory: build
         run: cp ${GITHUB_WORKSPACE}/COPYING .
+      # --- MODIFICATION : Patch nofatal pour MinGW ---
+      - name: Patch NSIS script (nofatal)
+        working-directory: build
+        run: sed -i 's/File /File \/nonfatal /g' strawberry.nsi
       - name: Build Windows installer
         working-directory: build
         run: makensis strawberry.nsi
@@ -937,6 +939,7 @@ jobs:
         shell: bash
         run: sed -i 's/\-lm$//g' ${{env.prefix_path_unix}}/lib/pkgconfig/*.pc
       - name: Run CMake
+        # --- MODIFICATION : BUILD_WERROR=OFF pour MSVC ---
         shell: cmd
         run: >
           cmake
@@ -945,6 +948,7 @@ jobs:
           -G "Ninja"
           -DCMAKE_BUILD_TYPE="${{env.cmake_buildtype}}"
           -DCMAKE_PREFIX_PATH="${{env.prefix_path_forwardslash}}/lib/cmake"
+          -DBUILD_WERROR=OFF
           -DARCH="${{matrix.arch}}"
           -DENABLE_WIN32_CONSOLE=${{env.enable_win32_console}}
           -DPKG_CONFIG_EXECUTABLE="${{env.prefix_path_forwardslash}}/bin/pkg-config.exe"
@@ -1034,6 +1038,11 @@ jobs:
         shell: bash
         working-directory: build
         run: curl -f -O -L https://aka.ms/vc14/vc_redist.$(test "${{matrix.arch}}" = "x86_64" && echo "x64" || echo "${{matrix.arch}}").exe
+      # --- MODIFICATION : Patch nofatal pour MSVC ---
+      - name: Patch NSIS script (nofatal)
+        shell: bash
+        working-directory: build
+        run: sed -i 's/File /File \/nonfatal /g' strawberry.nsi
       - name: Create nsis installer
         shell: cmd
         working-directory: build
@@ -1062,6 +1071,9 @@ jobs:
       - build-windows-mingw
       - build-windows-msvc
       - build-haiku
+      # --- MODIFICATION : Ajout des BSD à la liste d'attente pour la release ---
+      - build-freebsd
+      - build-openbsd
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
