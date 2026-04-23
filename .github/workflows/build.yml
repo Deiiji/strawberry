@@ -1071,10 +1071,11 @@ jobs:
       - build-windows-mingw
       - build-windows-msvc
       - build-haiku
-      # --- MODIFICATION : Ajout des BSD à la liste d'attente pour la release ---
       - build-freebsd
       - build-openbsd
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
